@@ -38,6 +38,6 @@ setup(
     ],
     packages=[PACKAGE_NAME],
     include_package_data=True,
-    install_requires=["virtualbox =2.0.0"],
+    install_requires=["virtualbox ==2.0.0"],
     entry_points={},
 )
