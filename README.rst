@@ -7,8 +7,6 @@ Demo
 ----
 Get a list of machines:
 
-.. code_block:: python
-
     >>> from hal9k.meta import Meta
     >>> meta = Meta()
     >>> meta.get_machines()
