@@ -5,7 +5,7 @@ import sys
 from setuptools import setup
 
 HERE = pathlib.Path(__file__).parent
-README = (HERE / "README.rst").read_text()
+README = (HERE / "README.md").read_text()
 PACKAGE_NAME = "hal9k"
 
 CONST_TEXT = (HERE / f"{PACKAGE_NAME}/const.py").read_text()
@@ -16,7 +16,7 @@ setup(
     version=VERSION,
     description="The HackerLab 9000 Controller Library.",
     long_description=README,
-    long_description_content_type="text/x-rst",
+    long_description_content_type="text/markdown",
     keywords="hacker hacking lab laboratory virtual machine virtualbox vm",
     url="https://github.com/haxys-labs/lib_hal9k",
     project_urls={
