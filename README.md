@@ -2,10 +2,6 @@
 
 The **HackerLab 9000** controller library.
 
-## Installation Instructions
-
-
-
 ## Demo
 
 Get a list of machines:
