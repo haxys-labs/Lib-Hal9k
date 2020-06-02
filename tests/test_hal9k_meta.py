@@ -1,28 +1,31 @@
 """Test the hal9k Meta class."""
 
-from unittest import TestCase, mock
-from string import ascii_letters
 from random import choice
+from string import ascii_letters
+from unittest import TestCase, mock
 
 from hal9k import Meta
+
 
 class Hal9kMetaTest(TestCase):
     @staticmethod
     def random_name():
-        return ''.join(choice(ascii_letters) for _ in range(5))
-
+        return "".join(choice(ascii_letters) for _ in range(5))
 
     @mock.patch("hal9k.meta.virtualbox.VirtualBox")
     def test_meta_get_tracks(self, mock_VirtualBox):
         # Simulate the VirtualBox class.
         def random_name():
             return self.random_name()
+
         class Track:
             def __init__(self, name):
                 self.name = name
+
         class Vbox:
             def __init__(self):
                 self.machines = [Track(random_name) for index in range(5)]
+
         # Set up the test environment.
         vbox = Vbox()
         track_names = [track.name for track in vbox.machines]
@@ -39,10 +42,12 @@ class Hal9kMetaTest(TestCase):
         class Track:
             def __init__(self, name):
                 self.name = name
+
             def __eq__(self, other):
                 if isinstance(other, Track):
                     return self.name == other.name
                 return False
+
         # Set up the test environment.
         track_title = self.random_name()
         bad_title = self.random_name()

@@ -2,7 +2,7 @@
 
 import virtualbox
 
-from hal9k import Track
+from hal9k.track import Track
 
 
 class Meta:
