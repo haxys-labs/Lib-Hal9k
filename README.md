@@ -4,8 +4,6 @@ The **HackerLab 9000** controller library.
 
 ## Demo
 
-Get a list of machines:
-
 ```python
 >>> from hal9k import Meta
 >>> # Instantiate a Meta controller.
