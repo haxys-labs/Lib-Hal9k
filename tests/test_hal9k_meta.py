@@ -13,7 +13,7 @@ class Hal9kMetaTest(TestCase):
 
 
     @mock.patch("hal9k.meta.virtualbox.VirtualBox")
-    def test_meta_get_machines(self, mock_VirtualBox):
+    def test_meta_get_tracks(self, mock_VirtualBox):
         # Simulate the VirtualBox class.
         def random_name():
             return self.random_name()
@@ -29,12 +29,12 @@ class Hal9kMetaTest(TestCase):
         mock_VirtualBox.return_value = vbox
         # Spawn the `Meta` class.
         with Meta() as meta:
-            # Check the return value of the `get_machines` function.
-            self.assertEqual(meta.get_machines(), track_names)
+            # Check the return value of the `get_tracks` function.
+            self.assertEqual(meta.get_tracks(), track_names)
 
-    @mock.patch("hal9k.meta.Meta.get_machines")
+    @mock.patch("hal9k.meta.Meta.get_tracks")
     @mock.patch("hal9k.meta.Track")
-    def test_meta_fetch(self, mock_Track, mock_get_machines):
+    def test_meta_fetch(self, mock_Track, mock_get_tracks):
         # Simulate the Track class.
         class Track:
             def __init__(self, name):
@@ -48,7 +48,7 @@ class Hal9kMetaTest(TestCase):
         bad_title = self.random_name()
         track = Track(track_title)
         mock_Track.return_value = track
-        mock_get_machines.return_value = [track_title]
+        mock_get_tracks.return_value = [track_title]
         # Spawn the `Meta` class.
         with Meta() as meta:
             # Check that the function returns a Track.
