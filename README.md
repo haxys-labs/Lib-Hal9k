@@ -17,4 +17,5 @@ The **HackerLab 9000** controller library.
 
 ## Changelog
 
-* **0.1.0** :: Added `Meta` class with `get_machines` function.
+* **0.2.0** :: Added `fetch` function to `Meta` class.
+* **0.1.0** :: Added `Meta` class with `get_tracks` function.
