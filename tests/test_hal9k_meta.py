@@ -35,9 +35,10 @@ class Hal9kMetaTest(TestCase):
             # Check the return value of the `get_tracks` function.
             self.assertEqual(meta.get_tracks(), track_names)
 
+    @mock.patch("hal9k.meta.virtualbox.VirtualBox")
     @mock.patch("hal9k.meta.Meta.get_tracks")
     @mock.patch("hal9k.meta.Track")
-    def test_meta_fetch(self, mock_Track, mock_get_tracks):
+    def test_meta_fetch(self, mock_Track, mock_get_tracks, mock_VirtualBox):
         # Simulate the Track class.
         class Track:
             def __init__(self, name):
@@ -54,10 +55,13 @@ class Hal9kMetaTest(TestCase):
         track = Track(track_title)
         mock_Track.return_value = track
         mock_get_tracks.return_value = [track_title]
+        vbox = mock.MagicMock()
+        mock_VirtualBox.return_value = vbox
         # Spawn the `Meta` class.
         with Meta() as meta:
             # Check that the function returns a Track.
             self.assertEqual(meta.fetch(track_title), track)
+            mock_Track.assert_called_with(track_title, vbox)
             # Check that the function returns IndexError with a bad track.
             with self.assertRaises(IndexError):
                 meta.fetch(bad_title)

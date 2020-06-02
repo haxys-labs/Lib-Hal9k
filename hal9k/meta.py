@@ -27,7 +27,7 @@ class Meta:
     def fetch(self, track_name):
         """Return a Track controller for the specified track."""
         if track_name in self.get_tracks():
-            return Track(track_name)
+            return Track(track_name, self.__vbox)
         raise IndexError
 
     def get_tracks(self):
