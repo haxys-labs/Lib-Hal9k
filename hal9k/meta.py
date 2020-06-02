@@ -2,6 +2,8 @@
 
 import virtualbox
 
+from hal9k import Track
+
 
 class Meta:
     """The Meta Class.
@@ -22,6 +24,12 @@ class Meta:
         del self.__vbox
 
     # Public Functions
+    def fetch(self, track_name):
+        """Return a Track controller for the specified track."""
+        if track_name in self.get_machines():
+            return Track(track_name)
+        raise IndexError
+
     def get_machines(self):
         """Return the names of all available VMs."""
         return [vm.name for vm in self.__vbox.machines]
