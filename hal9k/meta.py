@@ -26,10 +26,10 @@ class Meta:
     # Public Functions
     def fetch(self, track_name):
         """Return a Track controller for the specified track."""
-        if track_name in self.get_machines():
+        if track_name in self.get_tracks():
             return Track(track_name)
         raise IndexError
 
-    def get_machines(self):
+    def get_tracks(self):
         """Return the names of all available VMs."""
         return [vm.name for vm in self.__vbox.machines]
