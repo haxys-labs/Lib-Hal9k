@@ -25,3 +25,7 @@ class Track:
             self.__session, "headless", ""
         )
         progress.wait_for_completion()
+
+    def stop(self):
+        """Stop the VM."""
+        self.__session.console.power_down()
