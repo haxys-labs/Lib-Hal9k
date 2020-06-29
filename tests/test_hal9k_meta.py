@@ -8,22 +8,33 @@ from hal9k import Meta
 
 
 class Hal9kMetaTest(TestCase):
+    """Tests for the hal9k.Meta class."""
+
     @staticmethod
     def random_name():
+        """Produce a random string of five characters."""
         return "".join(choice(ascii_letters) for _ in range(5))
 
     @mock.patch("hal9k.meta.virtualbox.VirtualBox")
     def test_meta_get_tracks(self, mock_VirtualBox):
+        """Test the Meta.get_tracks() function."""
         # Simulate the VirtualBox class.
         def random_name():
+            """Proxy function."""
             return self.random_name()
 
         class Track:
+            """Mock Track."""
+
             def __init__(self, name):
+                """Initialize the mock Track."""
                 self.name = name
 
         class Vbox:
+            """Mock Vbox."""
+
             def __init__(self):
+                """Initialize the mock Vbox."""
                 self.machines = [Track(random_name) for index in range(5)]
 
         # Set up the test environment.
@@ -39,12 +50,17 @@ class Hal9kMetaTest(TestCase):
     @mock.patch("hal9k.meta.Meta.get_tracks")
     @mock.patch("hal9k.meta.Track")
     def test_meta_fetch(self, mock_Track, mock_get_tracks, mock_VirtualBox):
-        # Simulate the Track class.
+        """Test the Meta.fetch() function."""
+
         class Track:
+            """Mock Track."""
+
             def __init__(self, name):
+                """Initialize the mock Track."""
                 self.name = name
 
             def __eq__(self, other):
+                """Compare the mock Track with another object."""
                 if isinstance(other, Track):
                     return self.name == other.name
                 return False
