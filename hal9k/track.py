@@ -26,6 +26,36 @@ class Track:
         )
         progress.wait_for_completion()
 
+    def status(self):
+        """Check the VM status."""
+        machine_state_return_value = [
+            # -1: Error, 0: Stopped, 1: Running, 2: Rewinding, 3: Busy
+            -1,  # 0: Null (never used by API)
+            0,  # 1: Powered Off
+            0,  # 2: Saved
+            -1,  # 3: Teleported
+            0,  # 4: Aborted
+            1,  # 5: Running
+            -1,  # 6: Paused
+            -1,  # 7: Stuck
+            -1,  # 8: Teleporting
+            3,  # 9: Live Snapshotting
+            3,  # 10: Starting
+            3,  # 11: Stopping
+            3,  # 12: Saving
+            3,  # 13: Restoring
+            -1,  # 14: Teleporting Paused VM
+            -1,  # 15: Teleporting In
+            1,  # 16: Deleting Snapshot Online
+            -1,  # 17: Deleting Snapshot Paused
+            -1,  # 18: Online Snapshotting
+            2,  # 19: Restoring Snapshot
+            0,  # 20: Deleting Snapshot
+            -1,  # 21: Setting Up
+            0,  # 22: Offline Snapshotting
+        ]
+        return machine_state_return_value[int(self.__machine.state)]
+
     def stop(self):
         """Stop the VM."""
         self.__session.console.power_down()
