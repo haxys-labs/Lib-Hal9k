@@ -29,12 +29,19 @@ The Meta controller can list and retrieve tracks.
 >>> track = meta.fetch('Debian 9.12 x64 (BASE)')
 >>> # Start the track.
 >>> track.play()
+>>> # Check that it's running.
+>>> track.status()
+1
 >>> # Stop the track.
 >>> track.stop()
+>>> # Check that it's stopped.
+>>> track.status()
+0
 ```
 
 ## Changelog
 
+* **0.5.0** :: Added `status` function to `Track` class.
 * **0.4.0** :: Added `stop` function to `Track` class.
 * **0.3.0** :: Added `Track` class with `play` function.
 * **0.2.0** :: Added `fetch` function to `Meta` class.
