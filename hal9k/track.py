@@ -1,6 +1,7 @@
 """HackerLab 9000 Track Library."""
 
 import virtualbox
+from virtualbox.library import LockType
 
 
 class Track:
@@ -25,6 +26,14 @@ class Track:
             self.__session, "headless", ""
         )
         progress.wait_for_completion()
+
+    def rewind(self):
+        """Revert the VM to the PRODUCTION snapshot."""
+        self.__machine.lock_machine(self.__session, LockType(2))
+        snapshot = self.__machine.find_snapshot("PRODUCTION")
+        progress = self.__session.machine.restore_snapshot(snapshot)
+        progress.wait_for_completion()
+        self.__session.unlock_machine()
 
     def status(self):
         """Check the VM status."""
@@ -58,4 +67,5 @@ class Track:
 
     def stop(self):
         """Stop the VM."""
-        self.__session.console.power_down()
+        progress = self.__session.console.power_down()
+        progress.wait_for_completion()

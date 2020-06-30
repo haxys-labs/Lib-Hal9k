@@ -37,10 +37,13 @@ The Meta controller can list and retrieve tracks.
 >>> # Check that it's stopped.
 >>> track.status()
 0
+>>> # Rewind the track.
+>>> track.rewind()
 ```
 
 ## Changelog
 
+* **0.6.0** :: Added `rewind` function to `Track` class.
 * **0.5.0** :: Added `status` function to `Track` class.
 * **0.4.0** :: Added `stop` function to `Track` class.
 * **0.3.0** :: Added `Track` class with `play` function.
