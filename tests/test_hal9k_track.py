@@ -2,6 +2,8 @@
 
 from unittest import TestCase, mock
 
+from virtualbox.library import LockType
+
 from hal9k import Track
 
 
@@ -27,6 +29,7 @@ class Hal9kTrackTest(TestCase):
         self.vbox.find_machine.return_value = self.machine
         self.session.reset_mock()
         self.session.console = self.console
+        self.session.machine = self.machine
 
     @mock.patch("hal9k.track.virtualbox.Session")
     def test_track_init(self, mock_Session):
@@ -111,14 +114,37 @@ class Hal9kTrackTest(TestCase):
         self.reset()
 
     @mock.patch("hal9k.track.virtualbox.Session")
+    def test_track_rewind(self, mock_Session):
+        """Test the Track.rewind() function."""
+        # Set up test environment.
+        mock_Session.return_value = self.session
+        snapshot = mock.MagicMock()
+        self.machine.find_snapshot.return_value = snapshot
+        self.session.machine.restore_snapshot.return_value = self.progress
+        # Spawn the `Track` class.
+        with Track("demo track", self.vbox) as track:
+            # Rewind the track.
+            track.rewind()
+            # Check what happened.
+            self.machine.lock_machine.assert_called_with(
+                self.session, LockType(2)
+            )
+            self.machine.find_snapshot.assert_called_with("PRODUCTION")
+            self.session.machine.restore_snapshot.assert_called_with(snapshot)
+            self.progress.wait_for_completion.assert_called()
+        self.reset()
+
+    @mock.patch("hal9k.track.virtualbox.Session")
     def test_track_stop(self, mock_Session):
         """Test the Track.stop() function."""
         # Set up test environment.
         mock_Session.return_value = self.session
+        self.console.power_down.return_value = self.progress
         # Spawn the `Track` class.
         with Track("demo track", self.vbox) as track:
             # Stop the track.
             track.stop()
             # Check what happened.
             self.session.console.power_down.assert_called()
+            self.progress.wait_for_completion.assert_called()
         self.reset()
