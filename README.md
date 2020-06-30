@@ -47,7 +47,7 @@ The `Track.rewind` function requires a snapshot called `PRODUCTION` to exist for
 
 There can be only one `PRODUCTION` shapshot for each VM. If you decide to make a new `PRODUCTION` snapshot, be sure to delete the one previous.
 
-An exception will be raised for `Track.play` if the track is already playing. Likewise for `Track.stop` if the track is already stopped. Likewise for `Track.rewind` if the track is still playing. Tracks must be stopped before using `Track.play` or `Track.rewind`, and tracks must be playing before using `Track.stop`.
+An exception will be raised for `Track.play` and `Track.rewind` if the track is already playing. Likewise for `Track.stop` if the track is already stopped. Tracks must be stopped before using `Track.play` or `Track.rewind`, and tracks must be playing before using `Track.stop`.
 
 ## Changelog
 
