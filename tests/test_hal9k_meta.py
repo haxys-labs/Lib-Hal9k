@@ -18,12 +18,12 @@ class Hal9kMetaTest(TestCase):
     @mock.patch("hal9k.meta.virtualbox.VirtualBox")
     def test_meta_get_tracks(self, mock_VirtualBox):
         """Test the Meta.get_tracks() function."""
-        tracks = [mock.MagicMock() for _ in range(5)]
-        for track in tracks:
-            track.name = self.random_name()
+        vms = [mock.MagicMock() for index in range(5)]
+        for vm in vms:
+            vm.name = self.random_name()
         vbox = mock.MagicMock()
-        vbox.machines = tracks
-        track_names = [track.name for track in vbox.machines]
+        vbox.machines = vms
+        track_names = [vm.name for vm in vbox.machines]
         mock_VirtualBox.return_value = vbox
         # Spawn the `Meta` class.
         with Meta() as meta:
