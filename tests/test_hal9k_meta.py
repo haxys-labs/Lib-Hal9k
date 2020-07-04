@@ -4,6 +4,8 @@ from random import choice
 from string import ascii_letters
 from unittest import TestCase, mock
 
+import virtualbox
+
 from hal9k import Meta
 
 
@@ -18,12 +20,29 @@ class Hal9kMetaTest(TestCase):
     @mock.patch("hal9k.meta.virtualbox.VirtualBox")
     def test_meta_get_tracks(self, mock_VirtualBox):
         """Test the Meta.get_tracks() function."""
+        # Set up test environment.
         vms = [mock.MagicMock() for index in range(5)]
-        for vm in vms:
-            vm.name = self.random_name()
+        prod_vms = list()
+        track_names = list()
+        indices = list(range(5))
+        for _ in range(choice(range(2, 5))):
+            # Select from two to four systems to be in "production."
+            prod_vms.append(indices.pop(choice(range(len(indices)))))
+        for index in range(len(vms)):
+            vms[index].name = self.random_name()
+            if index in prod_vms:
+                # This one's live.
+                vms[index].find_snapshot.return_value = mock.MagicMock()
+                track_names.append(vms[index].name)
+            else:
+                # This one's not.
+                vms[
+                    index
+                ].find_snapshot.side_effect = (
+                    virtualbox.library.VBoxErrorObjectNotFound
+                )
         vbox = mock.MagicMock()
         vbox.machines = vms
-        track_names = [vm.name for vm in vbox.machines]
         mock_VirtualBox.return_value = vbox
         # Spawn the `Meta` class.
         with Meta() as meta:
