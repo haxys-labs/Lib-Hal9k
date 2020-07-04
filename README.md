@@ -43,14 +43,13 @@ The Meta controller can list and retrieve tracks.
 
 ## How it Works
 
-The `Track.rewind` function requires a snapshot called `PRODUCTION` to exist for the VM. Rewinding the track restores the `PRODUCTION` snapshot.
-
-There can be only one `PRODUCTION` shapshot for each VM. If you decide to make a new `PRODUCTION` snapshot, be sure to delete the one previous.
+The `Meta.get_tracks` function returns a list of the names of all VMs which have a `PRODUCTION` snapshot defined. The `Track.rewind` function restores the track's `PRODUCTION` snapshot. There can be only one `PRODUCTION` shapshot for each VM. If you decide to make a new `PRODUCTION` snapshot, be sure to delete the one previous. Any VMs lacking a `PRODUCTION` snapshot will be invisible to `hal9k`.
 
 An exception will be raised for `Track.play` and `Track.rewind` if the track is already playing. Likewise for `Track.stop` if the track is already stopped. Tracks must be stopped before using `Track.play` or `Track.rewind`, and tracks must be playing before using `Track.stop`.
 
 ## Changelog
 
+* **0.6.1** :: Updated `Meta.get_tracks` function to list only production-ready VMs.
 * **0.6.0** :: Added `rewind` function to `Track` class.
 * **0.5.0** :: Added `status` function to `Track` class.
 * **0.4.0** :: Added `stop` function to `Track` class.

@@ -23,6 +23,15 @@ class Meta:
         """Work with Context Managers."""
         del self.__vbox
 
+    @staticmethod
+    def __in_production(virtual_machine):
+        """Determine whether the VM is in production."""
+        try:
+            virtual_machine.find_snapshot("PRODUCTION")
+            return True
+        except virtualbox.library.VBoxErrorObjectNotFound:
+            return False
+
     # Public Functions
     def fetch(self, track_name):
         """Return a Track controller for the specified track."""
@@ -32,4 +41,6 @@ class Meta:
 
     def get_tracks(self):
         """Return the names of all available VMs."""
-        return [vm.name for vm in self.__vbox.machines]
+        return [
+            vm.name for vm in self.__vbox.machines if self.__in_production(vm)
+        ]
