@@ -18,27 +18,11 @@ class Hal9kMetaTest(TestCase):
     @mock.patch("hal9k.meta.virtualbox.VirtualBox")
     def test_meta_get_tracks(self, mock_VirtualBox):
         """Test the Meta.get_tracks() function."""
-        # Simulate the VirtualBox class.
-        def random_name():
-            """Proxy function."""
-            return self.random_name()
-
-        class Track:
-            """Mock Track."""
-
-            def __init__(self, name):
-                """Initialize the mock Track."""
-                self.name = name
-
-        class Vbox:
-            """Mock Vbox."""
-
-            def __init__(self):
-                """Initialize the mock Vbox."""
-                self.machines = [Track(random_name) for index in range(5)]
-
-        # Set up the test environment.
-        vbox = Vbox()
+        tracks = [mock.MagicMock() for _ in range(5)]
+        for track in tracks:
+            track.name = self.random_name()
+        vbox = mock.MagicMock()
+        vbox.machines = tracks
         track_names = [track.name for track in vbox.machines]
         mock_VirtualBox.return_value = vbox
         # Spawn the `Meta` class.
