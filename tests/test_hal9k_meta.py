@@ -35,24 +35,11 @@ class Hal9kMetaTest(TestCase):
     @mock.patch("hal9k.meta.Track")
     def test_meta_fetch(self, mock_Track, mock_get_tracks, mock_VirtualBox):
         """Test the Meta.fetch() function."""
-
-        class Track:
-            """Mock Track."""
-
-            def __init__(self, name):
-                """Initialize the mock Track."""
-                self.name = name
-
-            def __eq__(self, other):
-                """Compare the mock Track with another object."""
-                if isinstance(other, Track):
-                    return self.name == other.name
-                return False
-
         # Set up the test environment.
         track_title = self.random_name()
         bad_title = self.random_name()
-        track = Track(track_title)
+        track = mock.MagicMock()
+        track.name = track_title
         mock_Track.return_value = track
         mock_get_tracks.return_value = [track_title]
         vbox = mock.MagicMock()
