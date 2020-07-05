@@ -18,7 +18,7 @@ setup(
     long_description=README,
     long_description_content_type="text/markdown",
     keywords="hacker hacking lab laboratory virtual machine virtualbox vm",
-    url="https://github.com/haxys-labs/lib_hal9k",
+    url="https://github.com/haxys-labs/Lib-Hal9k",
     project_urls={
         "Source Code": "https://github.com/haxys-labs/Lib-Hal9k",
         "Documentation": "https://github.com/haxys-labs/Lib-Hal9k",
