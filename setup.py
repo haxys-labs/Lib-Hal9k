@@ -12,7 +12,7 @@ CONST_TEXT = (HERE / f"{PACKAGE_NAME}/const.py").read_text()
 VERSION = re.search('__version__ = "([^\']+)"', CONST_TEXT).group(1)
 
 setup(
-    name="Lib_HaL9k",
+    name="Lib-HaL9k",
     version=VERSION,
     description="The HackerLab 9000 Controller Library.",
     long_description=README,
@@ -20,8 +20,8 @@ setup(
     keywords="hacker hacking lab laboratory virtual machine virtualbox vm",
     url="https://github.com/haxys-labs/lib_hal9k",
     project_urls={
-        "Source Code": "https://github.com/haxys-labs/lib_hal9k",
-        "Documentation": "https://github.com/haxys-labs/lib_hal9k",
+        "Source Code": "https://github.com/haxys-labs/Lib-Hal9k",
+        "Documentation": "https://github.com/haxys-labs/Lib-Hal9k",
     },
     author="CMSteffen",
     author_email="cmsteffen@haxys.net",

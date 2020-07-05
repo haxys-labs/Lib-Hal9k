@@ -1,4 +1,4 @@
-# lib_hal9k
+# Lib-Hal9k
 
 The **HackerLab 9000** controller library.
 
@@ -26,9 +26,9 @@ The Meta controller can list and retrieve tracks.
 >>> meta = Meta()
 >>> # Retrieve a track listing.
 >>> meta.get_tracks()
-['Debian 9.12 x64 (BASE)', 'Windows 8 x64 (BASE)', 'MSEdge - Win10 (BASE)', 'Debian 10.3 x64 (BASE)']
+['Debian 9.12 x64', 'MSEdge - Win10', 'Kali 2020.2 x64']
 >>> # Instantiate a Track controller.
->>> track = meta.fetch('Debian 9.12 x64 (BASE)')
+>>> track = meta.fetch('Debian 9.12 x64')
 >>> # Start the track.
 >>> track.play()
 >>> # Check that it's running.
@@ -51,6 +51,7 @@ An exception will be raised for `Track.play` and `Track.rewind` if the track is 
 
 ## Changelog
 
+* **0.6.2** :: Updated names and language.
 * **0.6.1** :: Updated `Meta.get_tracks` function to list only production-ready VMs.
 * **0.6.0** :: Added `rewind` function to `Track` class.
 * **0.5.0** :: Added `status` function to `Track` class.
