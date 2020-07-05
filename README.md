@@ -2,6 +2,8 @@
 
 The **HackerLab 9000** controller library.
 
+(Note: This project is unaffiliated with the [Android Mod](http://hal9k.ru/) which goes by the name `Hal9k`.)
+
 ## Lingo
 
 This library is designed to provide the simplest possible API for controlling
