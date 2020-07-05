@@ -6,5 +6,5 @@ echo Checking distribution...
 twine check dist/*
 echo
 echo If distribution is ready, run the following:
-echo * twine-test.sh
-echo * twine-push.sh
+echo "* twine-test.sh"
+echo "* twine-push.sh"

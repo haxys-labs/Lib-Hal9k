@@ -1,3 +1,3 @@
-#!/bin/#!/usr/bin/env bash
+#!/bin/bash
 
-twine-upload dist/*
+twine upload dist/*
