@@ -4,7 +4,8 @@ from unittest import TestCase, mock
 
 from virtualbox.library import LockType
 
-from hal9k import Track
+import xpcom
+from hal9k import Track, TrackException
 
 
 class Hal9kTrackTest(TestCase):
@@ -138,6 +139,11 @@ class Hal9kTrackTest(TestCase):
     def test_track_stop(self, mock_Session):
         """Test the Track.stop() function."""
         # Set up test environment.
+        class TestException(Exception):
+            """An exception formatted similar to the xpcom exception."""
+
+            errno = 0x8000FFFF
+
         mock_Session.return_value = self.session
         self.console.power_down.return_value = self.progress
         # Spawn the `Track` class.
@@ -147,4 +153,9 @@ class Hal9kTrackTest(TestCase):
             # Check what happened.
             self.session.console.power_down.assert_called()
             self.progress.wait_for_completion.assert_called()
+            # Check what happens when we throw an exception.
+            self.session.console.power_down.side_effect = TestException()
+            with self.assertRaises(TrackException):
+                # Stop the track.
+                track.stop()
         self.reset()
