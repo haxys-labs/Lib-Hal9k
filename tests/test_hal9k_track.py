@@ -101,6 +101,9 @@ class Hal9kTrackTest(TestCase):
     @mock.patch("hal9k.track.virtualbox.Session")
     def test_track_play(self, mock_Session):
         """Test the Track.play() function."""
+        # TODO: Account for track already playing:
+        '''virtualbox.library.VBoxErrorInvalidObjectState:
+           0x80bb0007 (The given session is busy)'''
         # Set up test environment.
         mock_Session.return_value = self.session
         # Spawn the `Track` class.
@@ -117,6 +120,9 @@ class Hal9kTrackTest(TestCase):
     @mock.patch("hal9k.track.virtualbox.Session")
     def test_track_rewind(self, mock_Session):
         """Test the Track.rewind() function."""
+        # TODO: Account for track already playing:
+        '''virtualbox.library.VBoxErrorInvalidObjectState:
+           0x80bb0007 (The given session is busy)'''
         # Set up test environment.
         mock_Session.return_value = self.session
         snapshot = mock.MagicMock()
