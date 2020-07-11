@@ -1,7 +1,11 @@
 """HackerLab 9000 Track Library."""
 
 import virtualbox
-from virtualbox.library import LockType
+from virtualbox.library import LockType, VBoxErrorInvalidObjectState
+
+
+class TrackException(Exception):
+    """Custom exception for the track class."""
 
 
 class Track:
@@ -22,18 +26,28 @@ class Track:
 
     def play(self):
         """Start the VM in headless mode."""
-        progress = self.__machine.launch_vm_process(
-            self.__session, "headless", ""
-        )
-        progress.wait_for_completion()
+        try:
+            progress = self.__machine.launch_vm_process(
+                self.__session, "headless", ""
+            )
+            progress.wait_for_completion()
+        except VBoxErrorInvalidObjectState:
+            raise TrackException(
+                "Could not play track. (Track currently playing.)"
+            )
 
     def rewind(self):
         """Revert the VM to the PRODUCTION snapshot."""
-        self.__machine.lock_machine(self.__session, LockType(2))
-        snapshot = self.__machine.find_snapshot("PRODUCTION")
-        progress = self.__session.machine.restore_snapshot(snapshot)
-        progress.wait_for_completion()
-        self.__session.unlock_machine()
+        try:
+            self.__machine.lock_machine(self.__session, LockType(2))
+            snapshot = self.__machine.find_snapshot("PRODUCTION")
+            progress = self.__session.machine.restore_snapshot(snapshot)
+            progress.wait_for_completion()
+            self.__session.unlock_machine()
+        except VBoxErrorInvalidObjectState:
+            raise TrackException(
+                "Could not rewind track. (Track currently playing.)"
+            )
 
     def status(self):
         """Check the VM status."""
@@ -67,5 +81,21 @@ class Track:
 
     def stop(self):
         """Stop the VM."""
-        progress = self.__session.console.power_down()
-        progress.wait_for_completion()
+        try:
+            progress = self.__session.console.power_down()
+            progress.wait_for_completion()
+        except Exception as exception:
+            try:
+                if (
+                    exception.errno == -2147418113
+                    or exception.errno == 2147549183
+                ):
+                    raise TrackException(
+                        "Could not stop track. (Track already stopped.)"
+                    )
+                print(f"Unknown Error Number: {exception.errno}")
+                raise TrackException(
+                    "Could not stop track. (Unknown error number.)"
+                )
+            except AttributeError:
+                raise TrackException("Could not stop track. (Unknown error.)")

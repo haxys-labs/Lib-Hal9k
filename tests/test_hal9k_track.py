@@ -2,9 +2,9 @@
 
 from unittest import TestCase, mock
 
-from virtualbox.library import LockType
+from virtualbox.library import LockType, VBoxErrorInvalidObjectState
 
-from hal9k import Track
+from hal9k import Track, TrackException
 
 
 class Hal9kTrackTest(TestCase):
@@ -32,24 +32,24 @@ class Hal9kTrackTest(TestCase):
         self.session.machine = self.machine
 
     @mock.patch("hal9k.track.virtualbox.Session")
-    def test_track_init(self, mock_Session):
+    def test_track_init(self, mock_session):
         """Test Track initialization."""
         # Set up test environment.
-        mock_Session.return_value = self.session
+        mock_session.return_value = self.session
         # Spawn the `Track` class.
-        with Track("demo track", self.vbox) as track:
+        with Track("demo track", self.vbox) as _:
             # Check that the track was properly instantiated.
-            mock_Session.assert_called()
+            mock_session.assert_called()
             self.vbox.find_machine.assert_called_with("demo track")
         self.reset()
 
     @mock.patch("hal9k.track.virtualbox.Session")
-    def test_track_status(self, mock_Session):
+    def test_track_status(self, mock_session):
         """Test the Track.status() function."""
         # Set up test environment.
-        mock_Session.return_value = self.session
+        mock_session.return_value = self.session
 
-        class typeCastMe:
+        class TypeCastMe:
             """A class that demands typecasting."""
 
             def __init__(self, value):
@@ -93,15 +93,15 @@ class Hal9kTrackTest(TestCase):
                 # Check return values for various machine states.
                 # Each machine state is an object that should be typecast
                 # into an integer.
-                self.machine.state = typeCastMe(index)
+                self.machine.state = TypeCastMe(index)
                 self.assertEqual(track.status(), value)
         self.reset()
 
     @mock.patch("hal9k.track.virtualbox.Session")
-    def test_track_play(self, mock_Session):
+    def test_track_play(self, mock_session):
         """Test the Track.play() function."""
         # Set up test environment.
-        mock_Session.return_value = self.session
+        mock_session.return_value = self.session
         # Spawn the `Track` class.
         with Track("demo track", self.vbox) as track:
             # Play the track.
@@ -111,13 +111,20 @@ class Hal9kTrackTest(TestCase):
                 self.session, "headless", ""
             )
             self.progress.wait_for_completion.assert_called()
+            # Check what happens when we throw an exception.
+            self.machine.launch_vm_process.side_effect = VBoxErrorInvalidObjectState(
+                0x80BB0007, "(The given session is busy)"
+            )
+            with self.assertRaises(TrackException):
+                # Rewind the track.
+                track.play()
         self.reset()
 
     @mock.patch("hal9k.track.virtualbox.Session")
-    def test_track_rewind(self, mock_Session):
+    def test_track_rewind(self, mock_session):
         """Test the Track.rewind() function."""
         # Set up test environment.
-        mock_Session.return_value = self.session
+        mock_session.return_value = self.session
         snapshot = mock.MagicMock()
         self.machine.find_snapshot.return_value = snapshot
         self.session.machine.restore_snapshot.return_value = self.progress
@@ -132,13 +139,25 @@ class Hal9kTrackTest(TestCase):
             self.machine.find_snapshot.assert_called_with("PRODUCTION")
             self.session.machine.restore_snapshot.assert_called_with(snapshot)
             self.progress.wait_for_completion.assert_called()
+            # Check what happens when we throw an exception.
+            self.session.machine.restore_snapshot.side_effect = VBoxErrorInvalidObjectState(
+                0x80BB0007, "(The given session is busy)"
+            )
+            with self.assertRaises(TrackException):
+                # Rewind the track.
+                track.rewind()
         self.reset()
 
     @mock.patch("hal9k.track.virtualbox.Session")
-    def test_track_stop(self, mock_Session):
+    def test_track_stop(self, mock_session):
         """Test the Track.stop() function."""
         # Set up test environment.
-        mock_Session.return_value = self.session
+        class TestException(Exception):
+            """An exception formatted similar to the xpcom exception."""
+
+            errno = 0x8000FFFF
+
+        mock_session.return_value = self.session
         self.console.power_down.return_value = self.progress
         # Spawn the `Track` class.
         with Track("demo track", self.vbox) as track:
@@ -147,4 +166,9 @@ class Hal9kTrackTest(TestCase):
             # Check what happened.
             self.session.console.power_down.assert_called()
             self.progress.wait_for_completion.assert_called()
+            # Check what happens when we throw an exception.
+            self.session.console.power_down.side_effect = TestException()
+            with self.assertRaises(TrackException):
+                # Stop the track.
+                track.stop()
         self.reset()
