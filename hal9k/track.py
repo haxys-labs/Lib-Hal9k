@@ -31,7 +31,7 @@ class Track:
                 self.__session, "headless", ""
             )
             progress.wait_for_completion()
-        except VBoxErrorInvalidObjectState as exception:
+        except VBoxErrorInvalidObjectState:
             raise TrackException(
                 "Could not play track. (Track currently playing.)"
             )
@@ -44,7 +44,7 @@ class Track:
             progress = self.__session.machine.restore_snapshot(snapshot)
             progress.wait_for_completion()
             self.__session.unlock_machine()
-        except VBoxErrorInvalidObjectState as exception:
+        except VBoxErrorInvalidObjectState:
             raise TrackException(
                 "Could not rewind track. (Track currently playing.)"
             )

@@ -102,8 +102,8 @@ class Hal9kTrackTest(TestCase):
     def test_track_play(self, mock_Session):
         """Test the Track.play() function."""
         # TODO: Account for track already playing:
-        '''virtualbox.library.VBoxErrorInvalidObjectState:
-           0x80bb0007 (The given session is busy)'''
+        """virtualbox.library.VBoxErrorInvalidObjectState:
+           0x80bb0007 (The given session is busy)"""
         # Set up test environment.
         mock_Session.return_value = self.session
         # Spawn the `Track` class.
@@ -116,7 +116,9 @@ class Hal9kTrackTest(TestCase):
             )
             self.progress.wait_for_completion.assert_called()
             # Check what happens when we throw an exception.
-            self.machine.launch_vm_process.side_effect = VBoxErrorInvalidObjectState(0x80bb0007,"(The given session is busy)")
+            self.machine.launch_vm_process.side_effect = VBoxErrorInvalidObjectState(
+                0x80BB0007, "(The given session is busy)"
+            )
             with self.assertRaises(TrackException):
                 # Rewind the track.
                 track.play()
@@ -126,8 +128,8 @@ class Hal9kTrackTest(TestCase):
     def test_track_rewind(self, mock_Session):
         """Test the Track.rewind() function."""
         # TODO: Account for track already playing:
-        '''virtualbox.library.VBoxErrorInvalidObjectState:
-           0x80bb0007 (The given session is busy)'''
+        """virtualbox.library.VBoxErrorInvalidObjectState:
+           0x80bb0007 (The given session is busy)"""
         # Set up test environment.
         mock_Session.return_value = self.session
         snapshot = mock.MagicMock()
@@ -145,7 +147,9 @@ class Hal9kTrackTest(TestCase):
             self.session.machine.restore_snapshot.assert_called_with(snapshot)
             self.progress.wait_for_completion.assert_called()
             # Check what happens when we throw an exception.
-            self.session.machine.restore_snapshot.side_effect = VBoxErrorInvalidObjectState(0x80bb0007,"(The given session is busy)")
+            self.session.machine.restore_snapshot.side_effect = VBoxErrorInvalidObjectState(
+                0x80BB0007, "(The given session is busy)"
+            )
             with self.assertRaises(TrackException):
                 # Rewind the track.
                 track.rewind()
