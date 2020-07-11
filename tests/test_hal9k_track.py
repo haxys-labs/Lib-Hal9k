@@ -2,7 +2,7 @@
 
 from unittest import TestCase, mock
 
-from virtualbox.library import LockType
+from virtualbox.library import LockType, VBoxErrorInvalidObjectState
 
 import xpcom
 from hal9k import Track, TrackException
@@ -115,6 +115,11 @@ class Hal9kTrackTest(TestCase):
                 self.session, "headless", ""
             )
             self.progress.wait_for_completion.assert_called()
+            # Check what happens when we throw an exception.
+            self.machine.launch_vm_process.side_effect = VBoxErrorInvalidObjectState(0x80bb0007,"(The given session is busy)")
+            with self.assertRaises(TrackException):
+                # Rewind the track.
+                track.play()
         self.reset()
 
     @mock.patch("hal9k.track.virtualbox.Session")
@@ -139,6 +144,11 @@ class Hal9kTrackTest(TestCase):
             self.machine.find_snapshot.assert_called_with("PRODUCTION")
             self.session.machine.restore_snapshot.assert_called_with(snapshot)
             self.progress.wait_for_completion.assert_called()
+            # Check what happens when we throw an exception.
+            self.session.machine.restore_snapshot.side_effect = VBoxErrorInvalidObjectState(0x80bb0007,"(The given session is busy)")
+            with self.assertRaises(TrackException):
+                # Rewind the track.
+                track.rewind()
         self.reset()
 
     @mock.patch("hal9k.track.virtualbox.Session")
